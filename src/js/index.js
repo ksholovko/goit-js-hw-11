@@ -95,8 +95,10 @@ function createMarkup(response) {
     const comments = element.comments;
     const downloads = element.downloads;
 
-    const card = `<div class="photo-card">
-  <a href="${largePicture}" class="photo-link"><img src="${smallPicture}" alt="${tags}" loading="lazy" /></a>
+      const card = `<div class="photo-card">
+    <div class="image-container">
+    <a href="${largePicture}" class="photo-link"><img src="${smallPicture}" alt="${tags}" loading="lazy" /></a>
+    </div>
   <div class="info">
     <p class="info-item">
       <b>Likes ${likes}</b>

@@ -124,15 +124,29 @@ form {
   overflow: hidden;
 } */
 
-img {
+/* img {
   display: block;
   height: 30vh;
   object-fit: contain;
   margin-left: auto;
   margin-right: auto;
   width: auto;
+} */
+
+.image-container {
+  width: 100%;
+  height: 75%;
 }
 
+.image-container img {
+
+  display: block;
+  height: 100%;
+  width: 100%;
+
+  object-fit: fill;
+
+}
 
 .info {
   height: 20px;
