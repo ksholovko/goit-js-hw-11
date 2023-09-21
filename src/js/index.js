@@ -2,6 +2,8 @@
 import SearchApiService from "./search-service";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
 
 
 const searchForm = document.querySelector('#search-form');
@@ -16,29 +18,70 @@ searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', onLoadMore);
 
 async function onSearch(event) {
+  try {
+    
   event.preventDefault();
   
   searchApiService.input = event.currentTarget.elements.searchQuery.value;
   searchApiService.resetPage();
+  
   const results = await searchApiService.fetchImages();
+  
+  if (searchApiService.totalHitsNumber === 0) {
+    return Notify.failure("Sorry, there are no images matching your search query. Please try again.");  
+  }
+
+  Notify.success( `Hooray! We found ${searchApiService.totalHitsNumber} images.`);
+  
   clearGallery();
   createMarkup(results);
-  gallerybox.refresh();
 
+  if (searchApiService.totalHitsNumber <= 40) {
+   return loadMoreBtn.style.display = "none";
+  }
+  
   loadMoreBtn.style.display = "block";
-
+    
+  } catch (error) {
+  
+  Report.failure(
+    'Oops!',
+    'Something went wrong! Try reloading the page!',
+    'Okay',
+    );
+    console.log(error);
+  }
+  
 }
 
 async function onLoadMore() {
+
+  try {
   const results = await searchApiService.fetchImages();
   createMarkup(results);
-  gallerybox.refresh();
   smoothScroll()
+ 
+  if (Math.ceil(searchApiService.totalHitsNumber / 40) === searchApiService.page - 1) {
+    
+  loadMoreBtn.style.display = "none";
+  Notify.info("We're sorry, but you've reached the end of search results.");
+  
+  }
+    
+  } catch (error) {
+      Report.failure(
+    'Oops!',
+    'Something went wrong! Try reloading the page!',
+    'Okay',
+    );
+    console.log(error);
+  }
+  
 }
 
 function createMarkup(response) {
       
-    const responseArray = response.data.hits;
+  const responseArray = response.data.hits;
     
     let markupArray = [];
 
@@ -76,6 +119,7 @@ function createMarkup(response) {
 
     
   gallery.insertAdjacentHTML("beforeend", markupArray.join(" "));
+  gallerybox.refresh();
   
 }
 
@@ -96,45 +140,21 @@ window.scrollBy({
 
 }
 
+// _________GO TO TOP BUTTON__________
 
+const goToTopBtn = document.querySelector(".go-to-top-btn");
+goToTopBtn.addEventListener("click", topFunction)
 
+window.onscroll = function() {scrollFunction()};
 
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    goToTopBtn.style.display = "block";
+  } else {
+    goToTopBtn.style.display = "none";
+  }
+}
 
-//   
-
-// __________________Other option______________________________
-
-//     for (let i = 0; i < responseArray.length; i += 1) {
-    
-//     const smallPicture = responseArray[i].webformatURL;
-//     const largePicture = responseArray[i].largeImageURL;
-//     const tags = responseArray[i].tags;
-//     const likes = responseArray[i].likes;
-//     const views = responseArray[i].views;
-//     const comments = responseArray[i].comments;
-//     const downloads = responseArray[i].downloads;
-
-//     const card = `<div class="photo-card">
-//   <img src="${smallPicture}" alt="${tags}" loading="lazy" />
-//   <div class="info">
-//     <p class="info-item">
-//       <b>Likes ${likes}</b>
-//     </p>
-//     <p class="info-item">
-//       <b>Views ${views}</b>
-//     </p>
-//     <p class="info-item">
-//       <b>Comments ${comments}</b>
-//     </p>
-//     <p class="info-item">
-//       <b>Downloads ${downloads}</b>
-//     </p>
-//   </div>
-// </div>`;
-
-//     const gallery = document.querySelector('.gallery');
-//     gallery.insertAdjacentHTML("beforeend", card);
-// }
-
-    
-// }
+function topFunction() {
+  document.documentElement.scrollTop = 0;
+}

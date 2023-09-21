@@ -99,6 +99,7 @@ form {
   padding: 0;
 }
 
+
 .photo-card {
   display: flex;
   flex-direction: column;
@@ -115,17 +116,28 @@ form {
 
 }
 
-.photo-card img {
+/* .photo-link {
   display: block;
-  height: 100%;
+  height: auto;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
   overflow: hidden;
+} */
+
+img {
+  display: block;
+  height: 30vh;
+  object-fit: contain;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
 }
 
+
 .info {
+  height: 20px;
+  width: auto;
   display: flex;
-  height: 10vh;
   flex-direction: row;
   font-size: 12px;
   justify-content: space-evenly;
@@ -158,6 +170,51 @@ form {
 
 
 .load-more:hover {
+  background-color: rgba(0, 150, 136, 0.8);
+  color: #FFF;
+}
+
+/* .arrow-top { */
+/* position: fixed;
+  bottom: 45px;
+  right: 45px;
+
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: #303030;
+  border-radius: 50%;
+  color: #ffffff;
+}
+
+.arrow-top.is-hidden {
+  display: none;
+} */
+
+.go-to-top-btn {
+  display: none;
+
+  position: fixed;
+  bottom: 45px;
+  right: 35px;
+  z-index: 99;
+
+  border: none;
+  outline: none;
+
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 18px;
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.go-to-top-btn:hover {
   background-color: rgba(0, 150, 136, 0.8);
   color: #FFF;
 }
