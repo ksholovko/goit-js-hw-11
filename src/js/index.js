@@ -22,6 +22,10 @@ async function onSearch(event) {
     
   event.preventDefault();
   
+    if (event.currentTarget.elements.searchQuery.value === "") {
+     return Notify.failure('Oops! Enter something!');
+    }
+    
   searchApiService.input = event.currentTarget.elements.searchQuery.value;
   searchApiService.resetPage();
   
@@ -64,7 +68,7 @@ async function onLoadMore() {
   if (Math.ceil(searchApiService.totalHitsNumber / 40) === searchApiService.page - 1) {
     
   loadMoreBtn.style.display = "none";
-  Notify.info("We're sorry, but you've reached the end of search results.");
+  Notify.info("You've reached the end of search results.");
   
   }
     
