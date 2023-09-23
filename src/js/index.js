@@ -20,19 +20,24 @@ loadMoreBtn.addEventListener('click', onLoadMore);
 async function onSearch(event) {
   try {
     
-  event.preventDefault();
-  
-    if (event.currentTarget.elements.searchQuery.value === "") {
+    event.preventDefault();
+    
+    console.log(searchApiService.input);
+  searchApiService.input = event.currentTarget.elements.searchQuery.value.trim();
+    console.log(searchApiService.input);
+    
+    if (event.currentTarget.elements.searchQuery.value.trim() === "") {
      return Notify.failure('Oops! Enter something!');
     }
     
-  searchApiService.input = event.currentTarget.elements.searchQuery.value;
+  
   searchApiService.resetPage();
   
   const results = await searchApiService.fetchImages();
   
-  if (searchApiService.totalHitsNumber === 0) {
-    return Notify.failure("Sorry, there are no images matching your search query. Please try again.");  
+    if (searchApiService.totalHitsNumber === 0) {
+      clearGallery();
+      return Notify.failure("Sorry, there are no images matching your search query. Please try again.");  
   }
 
   Notify.success( `Hooray! We found ${searchApiService.totalHitsNumber} images.`);
@@ -61,11 +66,13 @@ async function onSearch(event) {
 async function onLoadMore() {
 
   try {
+
+  searchApiService.incrementPage();
   const results = await searchApiService.fetchImages();
   createMarkup(results);
   smoothScroll()
  
-  if (Math.ceil(searchApiService.totalHitsNumber / 40) === searchApiService.page - 1) {
+  if (Math.ceil(searchApiService.totalHitsNumber / 40) === searchApiService.page) {
     
   loadMoreBtn.style.display = "none";
   Notify.info("You've reached the end of search results.");
@@ -164,3 +171,13 @@ function scrollFunction() {
 function topFunction() {
   document.documentElement.scrollTop = 0;
 }
+
+
+
+// window.addEventListener("scroll", () => {
+//   if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) { 
+//     console.log(window.scrollY);
+//     console.log(window.innerHeight);
+//     console.log(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight);
+//   onLoadMore()
+// }})
