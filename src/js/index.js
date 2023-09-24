@@ -37,6 +37,7 @@ async function onSearch(event) {
   
     if (searchApiService.totalHitsNumber === 0) {
       clearGallery();
+      loadMoreBtn.style.display = "none";
       return Notify.failure("Sorry, there are no images matching your search query. Please try again.");  
   }
 
